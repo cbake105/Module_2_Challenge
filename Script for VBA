@@ -1,0 +1,127 @@
+Sub multi_year_analysis():
+    Dim i As Long
+    Dim j As Integer
+    Dim Days As Integer
+    Dim rowCount As Long
+    Dim start As Long
+    Dim DailyChange As Double
+    Dim PercentChange As Double
+    Dim Change As Double
+    Dim AverageChange As Double
+    Dim Total As Double
+    Dim ws As Worksheet
+       
+    ' Loop through worksheets
+      For Each ws In Worksheets
+    
+       ' Inital values for worksheets
+        start = 2
+        j = 0
+       Change = 0
+       DailyChange = 0
+       Total = 0
+        
+       ' Headers
+        ws.Range("i1").Value = "Ticker"
+        ws.Range("j1").Value = "Yearly Change"
+        ws.Range("k1").Value = "Percent Change"
+        ws.Range("l1").Value = "Total Stock Volume"
+        ws.Range("p1").Value = "Ticker"
+        ws.Range("q1").Value = "Value"
+        ws.Range("o2").Value = "Greatest % Increase"
+        ws.Range("o3").Value = "Greastest % Dercrease"
+        ws.Range("o4").Value = "Greatest Total Value"
+        
+        ' Retrieve row number of last row 
+        rowCount = ws.Cells(Rows.Count, "A").End(xlUp).Row
+        
+        For i = 2 To rowCount
+        
+        ' When ticker changes print results
+            
+            If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+            
+                ' Store results in variables
+                 Total = Total + ws.Cells(i, 7).Value
+                 
+                 ' Zero total volume
+                 If Total = 0 Then
+                     
+                ' Print results
+                ws.Range("i" & 2 + j).Value = ws.Cells(i, 1).Value
+                ws.Range("j" & 2 + j).Value = 0
+                ws.Range("k" & 2 + j).Value = "%" & 0
+                ws.Range("l" & 2 + j).Value = 0
+                    
+            Else
+                  ' Find first non-zero starting value
+                If ws.Cells(start, 3) = 0 Then
+                    For find_value = start To i
+                        If ws.Cells(find_value, 3).Value <> 0 Then
+                            start = find_value
+                    Exit For
+                End If
+            Next find_value
+        End If
+              
+            ' Calculate change
+                Change = (ws.Cells(i, 6) - ws.Cells(start, 3))
+                PercentChange = Change / ws.Cells(start, 3)
+                
+                ' Start next ticker
+                start = i + 1
+                
+                'Print results
+                ws.Range("i" & 2 + j).Value = ws.Cells(i, 1).Value
+                ws.Range("j" & 2 + j).NumberFormat = "0.00"
+                ws.Range("j" & 2 + j).Value = Change
+                ws.Range("k" & 2 + j).NumberFormat = "0.00%"
+                ws.Range("k" & 2 + j).Value = PercentChange
+                ws.Range("l" & 2 + j).Value = Total
+                
+                ' Colors - Green = Positive & Red = Negative
+                Select Case Change
+                    Case Is > 0
+                        ws.Range("j" & 2 + j).Interior.ColorIndex = 4
+                    Case Is < 0
+                        ws.Range("j" & 2 + j).Interior.ColorIndex = 3
+                    Case Else
+                        ws.Range("j" & 2 + j).Interior.ColorIndex = 0
+                End Select
+                
+                End If
+                
+                ' Reset variables for new ticker
+                Days = 0
+                DailyChange = 0
+                Change = 0
+                Total = 0
+                j = j + 1
+                
+                ' If ticker still the same add results
+                Else
+                    Total = Total + ws.Cells(i, 7).Value
+                    
+                End If
+                     
+          Next i
+            
+            ' Return below header row
+            volume_number = WorksheetFunction.Match(WorksheetFunction.Max(ws.Range("l2:l" & rowCount)), ws.Range("l2:l" & rowCount), 0)
+            increase_number = WorksheetFunction.Match(WorksheetFunction.Max(ws.Range("k2:k" & rowCount)), ws.Range("k2:k" & rowCount), 0)
+            decrease_number = WorksheetFunction.Match(WorksheetFunction.Min(ws.Range("k2:k" & rowCount)), ws.Range("k2:k" & rowCount), 0)
+            
+           ' Take the min, max & place them in greatest % increase / decrease
+           ws.Range("q2") = "%" & WorksheetFunction.Max(ws.Range("k2:k" & rowCount)) * 100
+           ws.Range("q3") = "%" & WorksheetFunction.Min(ws.Range("k2:k" & rowCount)) * 100
+           ws.Range("q4") = WorksheetFunction.Max(ws.Range("l2:l" & rowCount))
+           
+           ' Last ticker for total, greatest % of increase, decrease & average
+           ws.Range("p2") = ws.Cells(increase_number + 1, 9)
+           ws.Range("p3") = ws.Cells(decrease_number + 1, 9)
+           ws.Range("p4") = ws.Cells(volume_number + 1, 9)
+                             
+        Next ws
+        
+End Sub
+
