@@ -1,4 +1,4 @@
-# VBA-Challenge
+# VBA Scripting Challenge
 ![Blog-Image](https://github.com/cbake105/VBA_Stock_Market_Analysis/assets/133677209/4f136916-5bf4-42de-bd0b-eff524968f71)
 
 ## Instructions
