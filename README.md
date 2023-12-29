@@ -1,5 +1,5 @@
 # VBA-Challenge
-![Screenshot 2023-12-29 at 4 04 05 PM](https://github.com/cbake105/VBA_Stock_Market_Analysis/assets/133677209/62b75342-bf71-4fc9-b2f9-c7f8727c1929)
+![Blog-Image](https://github.com/cbake105/VBA_Stock_Market_Analysis/assets/133677209/4f136916-5bf4-42de-bd0b-eff524968f71)
 
 ## Instructions
 Using the Excel workbook in your .zip file, modify and analyze the sample-project data and try to uncover market trends.
